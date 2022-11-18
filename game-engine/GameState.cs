@@ -1,7 +1,6 @@
-﻿namespace game_engine
-{
-    public class GameSTate
-    {
+﻿namespace GameEngine;
 
-    }
+public static class GameState
+{
+
 }
