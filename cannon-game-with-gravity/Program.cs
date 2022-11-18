@@ -1,4 +1,5 @@
 ﻿using GameEngine.GameUtility;
+using GameEngine;
 
 Console.CursorVisible = false;
 if (!OperatingSystem.IsWindows())
@@ -8,4 +9,8 @@ if (!OperatingSystem.IsWindows())
 }
 Console.SetWindowSize(200, 50);
 ScreenBuffer.Initialize();
-ScreenBuffer.Draw(50, 200, '?');
+
+GameState.AddGameObject();
+GameState.GameTick();
+Console.ReadKey();
+
