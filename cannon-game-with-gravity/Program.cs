@@ -15,6 +15,19 @@ Task game = new(StartGame);
 game.Start();
 game.Wait();
 
+static void PlayerInput()
+{
+    if (KeyboardControl.KeyboardKeyDown(out List<ConsoleKey> keysPressed))
+    {
+        string keysString = "";
+        foreach (ConsoleKey key in keysPressed)
+        {
+            keysString += "Key Pressed: " + key.ToString() + " ";
+        }
+        ScreenBuffer.DrawText(1, 0, keysString);
+    }
+}
+
 
 static void StartGame()
 {
@@ -25,7 +38,7 @@ static void StartGame()
     while (GameState.Running)
     {
         Thread.Sleep(50);
-        //Read user input here
+        PlayerInput();
         GameState.GameTick();
     }
 }

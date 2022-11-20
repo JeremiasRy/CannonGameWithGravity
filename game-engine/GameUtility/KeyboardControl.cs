@@ -10,16 +10,29 @@ namespace GameEngine.GameUtility;
 public static class KeyboardControl
 {
     [DllImport("user32.dll")]
-    static extern bool GetKeyboardState(byte lpKeyState);
+    static extern bool GetKeyboardState(byte[] lpKeyState);
     [DllImport("user32.dll")]
-    static extern bool GetKeyState();
+    static extern short GetKeyState();
 
-    public static bool KeyboardKeyDown()
+    static byte[] _array = new byte[256];
+    public static bool KeyboardKeyDown(out List<ConsoleKey> keys)
     {
-        return false;
-    }
-    public static bool KeyPressed(ConsoleKey key)
-    {
-        return false;
+        keys = new();
+        GetKeyState();
+        GetKeyboardState(_array);
+        if (!_array.Any(key => key != 0 && key != 1))
+        {
+            return false;
+        } else
+        {
+            for (int i = 0; i < _array.Length; i++)
+            {
+                if (_array[i] != 0 && _array[i] != 1)
+                {
+                    keys.Add((ConsoleKey)i);
+                }
+            }
+            return true;
+        }   
     }
 }
