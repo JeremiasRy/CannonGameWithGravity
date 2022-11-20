@@ -10,7 +10,23 @@ if (!OperatingSystem.IsWindows())
 Console.SetWindowSize(200, 50);
 ScreenBuffer.Initialize();
 
-GameState.AddGameObject();
-GameState.GameTick();
-Console.ReadKey();
+Task game = new(StartGame);
+
+game.Start();
+game.Wait();
+
+
+static void StartGame()
+{
+    ScreenBuffer.DrawText(0, 0, "Press any key to start game loop");
+    ScreenBuffer.DrawScreen();
+    Console.ReadKey();
+    GameState.StartGame();
+    while (GameState.Running)
+    {
+        Thread.Sleep(50);
+        //Read user input here
+        GameState.GameTick();
+    }
+}
 
