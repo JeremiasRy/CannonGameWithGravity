@@ -10,7 +10,7 @@ public class GameObject
 {
     // All this is for gravity
     // Negative forces go up and left positive down and right,
-    const int MAX_VELOCITY = 50;
+    const int MAX_VELOCITY = 100;
     const int GRAVITY_FORCE = 700;
     const int FRICTION_FORCE = 12;
     const int FORCE_TO_INCREASE_VELOCITY = 1400;

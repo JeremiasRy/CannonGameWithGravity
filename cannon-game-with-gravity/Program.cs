@@ -38,7 +38,7 @@ static void StartGame()
     GameState.StartGame();
     while (GameState.Running)
     {
-        Thread.Sleep(50);
+        Thread.Sleep(35);
         PlayerInput();
         GameState.GameTick();
     }

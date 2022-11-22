@@ -19,11 +19,13 @@ public static class GameState
             if (!gameObject.OffScreenSide && !gameObject.OffScreenTop)
             {
                 ScreenBuffer.Draw(gameObject.Y, gameObject.X, gameObject.Draw());
-                ScreenBuffer.DrawText(1, 0, $"GameObj {gameObject.Id}, Yforce: {gameObject.YForce}, Xforce {gameObject.XForce}");
+                
             } else if (gameObject.OffScreenSide)
             {
                 _markForDelete.Add(gameObject);
             }
+            ScreenBuffer.DrawText(1, 0, $"GameObj {gameObject.Id}, Yforce: {gameObject.YForce}, Xforce {gameObject.XForce}");
+            ScreenBuffer.DrawText(2, 0, $"X { gameObject.X}, Y { gameObject.Y}");
         }
         foreach (var gameObj in _markForDelete)
         {
@@ -34,7 +36,7 @@ public static class GameState
     }
     public static void AddGameObject()
     {
-        _gameObjects.Add(new GameObject(1, 4000, -11000, 0, Console.WindowHeight - 1));
+        _gameObjects.Add(new GameObject(1, 5000, -12000, 0, Console.WindowHeight - 1));
     }
 
     public static void StartGame() => Running = true;
