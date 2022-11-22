@@ -10,7 +10,7 @@ public class GameObject
 {
     // All this is for gravity
     // Negative forces go up and left positive down and right,
-    const int MAX_VELOCITY = 100;
+    const int MAX_VELOCITY = 20;
     const int GRAVITY_FORCE = 700;
     const int FRICTION_FORCE = 12;
     const int FORCE_TO_INCREASE_VELOCITY = 1400;
@@ -46,7 +46,7 @@ public class GameObject
 
         if (GroundCollision(Y) && YForce > FORCE_TO_INCREASE_VELOCITY)
         {
-            YForce = 0 - YForce / 2;
+            YForce = 0 - YForce + 500;
         }
     }
     void ApplyHorizontalForces(int frictionAmount)
@@ -56,10 +56,7 @@ public class GameObject
         else
             XForce = XForce - frictionAmount <= 0 ? 0 : XForce - frictionAmount;
     }
-    void ApplyVerticalForces(int frictionAmount)
-    {
-        YForce += frictionAmount;
-    }
+    void ApplyVerticalForces(int frictionAmount) => YForce += frictionAmount;
 
     static int CalculateSpeed(int force)
     {

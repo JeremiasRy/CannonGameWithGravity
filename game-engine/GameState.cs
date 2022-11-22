@@ -36,7 +36,7 @@ public static class GameState
     }
     public static void AddGameObject()
     {
-        _gameObjects.Add(new GameObject(1, 5000, -12000, 0, Console.WindowHeight - 1));
+        _gameObjects.Add(new GameObject(1, 4000, -10000, 0, Console.WindowHeight - 1));
     }
 
     public static void StartGame() => Running = true;
