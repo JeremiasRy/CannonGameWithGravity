@@ -9,6 +9,7 @@ namespace GameEngine.Objects;
 public class GameObject
 {
     // All this is for gravity
+    // Negative forces go up and left positive down and right,
     const int MAX_VELOCITY = 5;
     const int GRAVITY_FORCE = 15;
     const int FRICTION_FORCE = 1;
