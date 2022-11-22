@@ -14,7 +14,7 @@ public static class KeyboardControl
     [DllImport("user32.dll")]
     static extern short GetKeyState();
 
-    static byte[] _array = new byte[256];
+    static readonly byte[] _array = new byte[256];
     public static bool KeyboardKeyDown(out List<ConsoleKey> keys)
     {
         keys = new();

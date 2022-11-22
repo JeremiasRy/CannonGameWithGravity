@@ -9,6 +9,7 @@ if (!OperatingSystem.IsWindows())
 }
 Console.SetWindowSize(200, 50);
 ScreenBuffer.Initialize();
+GameState.AddGameObject();
 
 Task game = new(StartGame);
 
