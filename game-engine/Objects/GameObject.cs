@@ -28,6 +28,17 @@ public class GameObject
     int XVelocity => CalculateSpeed(XForce);
     int YVelocity => CalculateSpeed(YForce);
 
+    public void UserMovement(int amount, bool up)
+    {
+        if (up)
+        {
+            YForce += amount;
+        } else
+        {
+            XForce += amount;
+        }
+    }
+
     public char Draw()
     {
         return '\u2588';
@@ -46,7 +57,7 @@ public class GameObject
 
         if (GroundCollision(Y) && YForce > FORCE_TO_INCREASE_VELOCITY)
         {
-            YForce = 0 - YForce + 500;
+            YForce = 0 - YForce / 2;
         }
     }
     void ApplyHorizontalForces(int frictionAmount)
