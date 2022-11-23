@@ -21,12 +21,12 @@ static void PlayerInput()
     if (KeyboardControl.KeyboardKeyDown(out List<ConsoleKey> keysPressed))
     {
         GameState.ConsecutiveKeyPresses++;
-        var multiplyAmount = GameState.ConsecutiveKeyPresses > 14 ? 14 : GameState.ConsecutiveKeyPresses;
+        var multiplyAmount = GameState.ConsecutiveKeyPresses > 18 ? 18 : GameState.ConsecutiveKeyPresses;
         foreach (ConsoleKey key in keysPressed)
         {
             switch (key)
             {
-                case ConsoleKey.Spacebar: 
+                case ConsoleKey.UpArrow: 
                     {
                         GameState.ApplyUserInput(-50 * multiplyAmount, true);
                     } 
