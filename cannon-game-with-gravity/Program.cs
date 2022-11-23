@@ -28,7 +28,7 @@ static void PlayerInput()
             {
                 case ConsoleKey.Spacebar: 
                     {
-                        GameState.ApplyUserInput(-1700, true);
+                        GameState.ApplyUserInput(-50 * multiplyAmount, true);
                     } 
                     break;
                 case ConsoleKey.RightArrow:
