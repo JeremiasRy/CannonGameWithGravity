@@ -14,7 +14,7 @@ public class GameObject
     const int GRAVITY_FORCE = 700;
     const int FRICTION_FORCE = 12;
     const int FORCE_TO_INCREASE_VELOCITY = 1400;
-    const int FRICTION_FORCE_GROUND = 600;
+    const int FRICTION_FORCE_GROUND = 400;
     //Gravity ends here
     public int Id { get; set; }
     public int X { get; private set; }
