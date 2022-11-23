@@ -14,7 +14,7 @@ public class GameObject
     const int GRAVITY_FORCE = 700;
     const int FRICTION_FORCE = 12;
     const int FORCE_TO_INCREASE_VELOCITY = 1400;
-    const int FRICTION_FORCE_GROUND = 600;
+    const int FRICTION_FORCE_GROUND = 200;
     //Gravity ends here
     public int Id { get; set; }
     public int X { get; private set; }
@@ -27,6 +27,17 @@ public class GameObject
 
     int XVelocity => CalculateSpeed(XForce);
     int YVelocity => CalculateSpeed(YForce);
+
+    public void UserMovement(int amount, bool up)
+    {
+        if (up)
+        {
+            YForce += amount;
+        } else
+        {
+            XForce += amount;
+        }
+    }
 
     public char Draw()
     {
@@ -46,7 +57,7 @@ public class GameObject
 
         if (GroundCollision(Y) && YForce > FORCE_TO_INCREASE_VELOCITY)
         {
-            YForce = 0 - YForce + 500;
+            YForce = 0 - YForce / 2;
         }
     }
     void ApplyHorizontalForces(int frictionAmount)

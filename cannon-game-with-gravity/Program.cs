@@ -20,12 +20,33 @@ static void PlayerInput()
 {
     if (KeyboardControl.KeyboardKeyDown(out List<ConsoleKey> keysPressed))
     {
-        string keysString = "";
+        GameState.ConsecutiveKeyPresses++;
+        var multiplyAmount = GameState.ConsecutiveKeyPresses > 14 ? 14 : GameState.ConsecutiveKeyPresses;
         foreach (ConsoleKey key in keysPressed)
         {
-            keysString += "Key Pressed: " + key.ToString() + " ";
+            switch (key)
+            {
+                case ConsoleKey.Spacebar: 
+                    {
+                        GameState.ApplyUserInput(-1700, true);
+                    } 
+                    break;
+                case ConsoleKey.RightArrow:
+                    {
+                        GameState.ApplyUserInput(50 * multiplyAmount, false);
+                    }
+                    break;
+                case ConsoleKey.LeftArrow:
+                    {
+                        GameState.ApplyUserInput(-50 * multiplyAmount, false);
+                    }
+                    break;
+            }
         }
-        ScreenBuffer.DrawText(1, 0, keysString);
+        
+    } else
+    {
+        GameState.ConsecutiveKeyPresses = 0;
     }
 }
 
