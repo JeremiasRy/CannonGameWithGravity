@@ -16,7 +16,11 @@ public static class GameState
         List<GameObject> _markForDelete = new();
         foreach (GameObject gameObject in _gameObjects)
         {
-            gameObject.Move();
+            if (gameObject is AffectedByForces gravObj)
+            {
+                gravObj.Move(gravObj.XVelocity(), gravObj.YVelocity());
+                ScreenBuffer.DrawText(1, 0, $"GameObj {gameObject.Id}, Yforce: {gravObj.YForce}, Xforce {gravObj.XForce}");
+            }
             if (!gameObject.OffScreenSide && !gameObject.OffScreenTop)
             {
                 ScreenBuffer.Draw(gameObject.Y, gameObject.X, gameObject.Draw());
@@ -25,7 +29,7 @@ public static class GameState
             {
                 _markForDelete.Add(gameObject);
             }
-            ScreenBuffer.DrawText(1, 0, $"GameObj {gameObject.Id}, Yforce: {gameObject.YForce}, Xforce {gameObject.XForce}");
+            
             ScreenBuffer.DrawText(2, 0, $"X { gameObject.X}, Y { gameObject.Y}");
             ScreenBuffer.DrawText(3, 0, $"Consecutive key presses {ConsecutiveKeyPresses}");
         }
@@ -38,15 +42,11 @@ public static class GameState
     }
     public static void AddGameObject()
     {
-        _gameObjects.Add(new GameObject(1, 0, 0, 0, Console.WindowHeight - 1));
+        _gameObjects.Add(new AffectedByForces(1) { X = 0, Y = Console.WindowHeight - 1, XForce = 1000, YForce = -1000});
     }
-    public static void ApplyUserInput(int amount, bool up)
+    public static void ApplyUserInput(bool figureitout)
     {
-        var userObj = _gameObjects.FirstOrDefault();
-        if (userObj is not null)
-        {
-            userObj.UserMovement(amount, up);
-        }
+        
     }
 
     public static void StartGame() => Running = true;
