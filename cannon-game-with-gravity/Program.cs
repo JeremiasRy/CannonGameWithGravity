@@ -28,17 +28,17 @@ static void PlayerInput()
             {
                 case ConsoleKey.UpArrow: 
                     {
-                        GameState.ApplyUserInput(-50 * multiplyAmount, true);
+                        GameState.ApplyUserInput(-20 * multiplyAmount, true);
                     } 
                     break;
                 case ConsoleKey.RightArrow:
                     {
-                        GameState.ApplyUserInput(50 * multiplyAmount, false);
+                        GameState.ApplyUserInput(20 * multiplyAmount, false);
                     }
                     break;
                 case ConsoleKey.LeftArrow:
                     {
-                        GameState.ApplyUserInput(-50 * multiplyAmount, false);
+                        GameState.ApplyUserInput(-20 * multiplyAmount, false);
                     }
                     break;
             }
@@ -59,7 +59,7 @@ static void StartGame()
     GameState.StartGame();
     while (GameState.Running)
     {
-        Thread.Sleep(35);
+        Thread.Sleep(20);
         PlayerInput();
         GameState.GameTick();
     }
