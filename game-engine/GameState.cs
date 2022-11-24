@@ -34,7 +34,7 @@ public static class GameState
     }
     public static void AddGameObject()
     {
-        _gameObjects.Add(new AffectedByForces(1) { X = Console.WindowWidth / 2, Y = Console.WindowHeight - 1, XForce = -12000, YForce = -6000 });
+        _gameObjects.Add(new AffectedByForces(1) { X = 0, Y = Console.WindowHeight - 1, XForce = -6000, YForce = -6000 });
     }
     public static void ApplyUserInput(bool figureitout)
     {

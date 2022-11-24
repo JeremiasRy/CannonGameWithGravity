@@ -13,7 +13,7 @@ public class AffectedByForces : GameObject
     const int MAX_VELOCITY = 12;
     const int GRAVITY_FORCE = 600;
     const int FRICTION_FORCE = 12;
-    const int FORCE_TO_INCREASE_VELOCITY = 1200;
+    const int FORCE_TO_INCREASE_VELOCITY = 800;
     const int FRICTION_FORCE_GROUND = 550;
     //Gravity ends here
     public int XForce { get; set; } = 0;
@@ -60,7 +60,17 @@ public class AffectedByForces : GameObject
         else
             XForce = XForce - frictionAmount < 0 ? 0 : XForce - frictionAmount;
     }
-    void ApplyVerticalForces(int frictionAmount) => YForce += frictionAmount;
+    void ApplyVerticalForces(int frictionAmount)
+    {
+        if (YForce < 0 && XForce > YForce)
+        {
+            YForce = YForce + frictionAmount - Math.Abs(XForce) / 40;
+        } else
+        {
+            YForce += frictionAmount;
+        }
+        
+    } 
 
     static int CalculateSpeed(int force)
     {
