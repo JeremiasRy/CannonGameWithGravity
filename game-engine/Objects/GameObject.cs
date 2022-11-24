@@ -23,15 +23,11 @@ public class GameObject
     {
  
     }
-
-
+    public static bool GroundCollision(int y) => y >= Console.WindowHeight - 1;
+    public static bool WallCollision(int x) => x > Console.WindowWidth - 1 || x < 0;
     /// <summary>
     /// Still needs a graphic object!!
     /// </summary>
-    /// <param name="forceHorizontal"></param>
-    /// <param name="forceVertical"></param>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
     public GameObject(int id)
     {
         Id = id;

@@ -21,28 +21,20 @@ public static class GameState
                 gravObj.Move(gravObj.XVelocity(), gravObj.YVelocity());
                 ScreenBuffer.DrawText(1, 0, $"GameObj {gameObject.Id}, Yforce: {gravObj.YForce}, Xforce {gravObj.XForce}");
             }
-            if (!gameObject.OffScreenSide && !gameObject.OffScreenTop)
+            if (!gameObject.OffScreenTop && !gameObject.OffScreenSide)
             {
                 ScreenBuffer.Draw(gameObject.Y, gameObject.X, gameObject.Draw());
-                
-            } else if (gameObject.OffScreenSide)
-            {
-                _markForDelete.Add(gameObject);
             }
             
             ScreenBuffer.DrawText(2, 0, $"X { gameObject.X}, Y { gameObject.Y}");
             ScreenBuffer.DrawText(3, 0, $"Consecutive key presses {ConsecutiveKeyPresses}");
-        }
-        foreach (var gameObj in _markForDelete)
-        {
-            _gameObjects.RemoveAt(_gameObjects.IndexOf(gameObj));
         }
         ScreenBuffer.DrawText(0, 0, $"Current tick {Tick}");
         ScreenBuffer.DrawScreen();
     }
     public static void AddGameObject()
     {
-        _gameObjects.Add(new AffectedByForces(1) { X = 0, Y = Console.WindowHeight - 1, XForce = 1000, YForce = -1000});
+        _gameObjects.Add(new AffectedByForces(1) { X = Console.WindowWidth / 2, Y = Console.WindowHeight - 1, XForce = -12000, YForce = -6000 });
     }
     public static void ApplyUserInput(bool figureitout)
     {
