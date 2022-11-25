@@ -46,7 +46,7 @@ public class AffectedByForces : GameObject
         }
         if (GroundCollision(Y + Height) && !(YForce < 0))
         {
-            Y = Console.WindowHeight - Height;
+            Y = Console.WindowHeight - 1 - Height;
             YForce = ReverseForce(YForce) / 2;
         } 
         OffScreenTop = Y < 0;
