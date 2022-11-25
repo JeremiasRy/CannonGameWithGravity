@@ -21,37 +21,36 @@ public class AffectedByForces : GameObject
 
     public int XVelocity()
     {
-        if (XForce != 0)
-            ApplyHorizontalForces(GroundCollision(Y) ? FRICTION_FORCE + FRICTION_FORCE_GROUND : FRICTION_FORCE);
-        
+        if (GroundCollision(Y + Height))
+            ApplyHorizontalForces(FRICTION_FORCE + FRICTION_FORCE_GROUND);
+        else
+            ApplyHorizontalForces(FRICTION_FORCE);
+
         return CalculateSpeed(XForce);
     }
     public int YVelocity()
     {
-        if (GroundCollision(Y) && YForce > FORCE_TO_INCREASE_VELOCITY)
-            YForce = ReverseForce(YForce) / 2;
         ApplyVerticalForces(GRAVITY_FORCE + FRICTION_FORCE);
         return CalculateSpeed(YForce);
     }
 
     public override void Move(int x, int y)
     {
-        if (X + x > Console.WindowWidth - 1)
+        X += x;
+        Y += y;
+
+        if ((SideCollision(X) || SideCollision(X + Width)))
         {
-            var spillOver = X + x - (Console.WindowWidth - 1);
-            X = Console.WindowWidth - 1;
-            XForce = ReverseForce(XForce);
-        } else if (X + x < 0)
-        {
-            X = 0;
-            XForce = ReverseForce(XForce);
-        } else
-        {
-            X += x;
+            X = X < Console.WindowWidth / 2 ? 0 : Console.WindowWidth - 1 - Width;
+            XForce = Math.Abs(XForce) > FORCE_TO_INCREASE_VELOCITY ? ReverseForce(XForce) / 2 : XForce;
         }
-        Y = Y + y > Console.WindowHeight - 1 ? Console.WindowHeight - 1 : Y + y;
+        if (GroundCollision(Y + Height) && !(YForce < 0))
+        {
+            Y = Console.WindowHeight - Height;
+            YForce = ReverseForce(YForce) / 2;
+        } 
         OffScreenTop = Y < 0;
-        OffScreenSide = X < 0 || X > Console.WindowWidth - 1;
+        OffScreenSide = X < 0 || X + Width > Console.WindowWidth - 1;
     }
     void ApplyHorizontalForces(int frictionAmount)
     {
@@ -81,7 +80,7 @@ public class AffectedByForces : GameObject
 
     static int ReverseForce(int force) => force < 0 ? Math.Abs(force) : 0 - force;
 
-    public AffectedByForces(int id) : base(id)
+    public AffectedByForces(int id, string graphics) : base(id, graphics)
     {
         
     }

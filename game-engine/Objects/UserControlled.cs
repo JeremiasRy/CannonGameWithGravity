@@ -6,14 +6,20 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Objects;
 
-public class UserControlled : GameObject
+public class UserControlled : AffectedByForces
 {
-    public void UserMovement(int amount, bool up)
+    public void UserMovement(int amount, bool vertical)
     {
-
+        if (vertical)
+        {
+            YForce += amount;
+        } else
+        {
+            XForce += amount;
+        }
     }
 
-    public UserControlled(int id) : base(id)
+    public UserControlled(int id, string graphics) : base(id, graphics)
     {
 
     }

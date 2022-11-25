@@ -5,11 +5,13 @@ namespace GameEngine;
 
 public static class GameState
 {
+    static Random random = new Random();
     public static int Tick { get; private set; }
     public static bool Running { get; private set; }
     public static int ConsecutiveKeyPresses { get; set; } = 0;
 
     static List<GameObject> _gameObjects = new();
+    static readonly UserControlled _player = new(0, Graphics.Tank);
     public static void GameTick() //Call screen buffer here!
     {
         Tick++;
@@ -19,28 +21,60 @@ public static class GameState
             if (gameObject is AffectedByForces gravObj)
             {
                 gravObj.Move(gravObj.XVelocity(), gravObj.YVelocity());
-                ScreenBuffer.DrawText(1, 0, $"GameObj {gameObject.Id}, Yforce: {gravObj.YForce}, Xforce {gravObj.XForce}");
             }
             if (!gameObject.OffScreenTop && !gameObject.OffScreenSide)
             {
-                ScreenBuffer.Draw(gameObject.Y, gameObject.X, gameObject.Draw());
+                for (int i = 0; i < gameObject.Height; i++)
+                {
+                    ScreenBuffer.DrawText(gameObject.Y + i, gameObject.X, gameObject.Draw[i]);
+                }
+                
             }
-            
-            ScreenBuffer.DrawText(2, 0, $"X { gameObject.X}, Y { gameObject.Y}");
-            ScreenBuffer.DrawText(3, 0, $"Consecutive key presses {ConsecutiveKeyPresses}");
         }
         ScreenBuffer.DrawText(0, 0, $"Current tick {Tick}");
+        ScreenBuffer.DrawText(1, 0, $"User X: {_player.X} Y: {_player.Y} XForce: {_player.XForce} YForce: {_player.YForce}");
         ScreenBuffer.DrawScreen();
     }
-    public static void AddGameObject()
+    public static void ShootCannon()
     {
-        _gameObjects.Add(new AffectedByForces(1) { X = 0, Y = Console.WindowHeight - 1, XForce = -6000, YForce = -6000 });
+        _gameObjects.Add(new AffectedByForces(Tick, Graphics.Particle) { X = _player.X + _player.Width / 2, Y = _player.Y -1, YForce = -3000 - random.Next(3000), XForce = 5000 - random.Next(10000) });
     }
-    public static void ApplyUserInput(bool figureitout)
+    public static void AddTank()
     {
-        
+        _gameObjects.Add(_player);
     }
+    public static void MoveTank(UserAction act)
+    {
+        switch (act)
+        {
+            case UserAction.Up:
+                {
+                    _player.UserMovement(-800, true);
+                } break;
+            case UserAction.Left:
+                {
+                    _player.UserMovement(-800, false);
+                } break;
+            case UserAction.Right:
+                {
+                    _player.UserMovement(800, false);
+                } break;
+            case UserAction.Shoot:
+                {
+                    ShootCannon();
+                } break;
+        }
+    }
+
 
     public static void StartGame() => Running = true;
     public static void PauseGame() => Running = false;
+
+    public enum UserAction
+    {
+        Left,
+        Right,
+        Up,
+        Shoot
+    }
 }

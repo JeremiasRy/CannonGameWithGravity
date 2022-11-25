@@ -9,7 +9,7 @@ if (!OperatingSystem.IsWindows())
 }
 Console.SetWindowSize(200, 50);
 ScreenBuffer.Initialize();
-GameState.AddGameObject();
+GameState.ShootCannon();
 
 Task game = new(StartGame);
 
@@ -27,17 +27,22 @@ static void PlayerInput()
             {
                 case ConsoleKey.UpArrow: 
                     {
-                        GameState.ApplyUserInput(true);
+                        GameState.MoveTank(GameState.UserAction.Up);
                     } 
                     break;
                 case ConsoleKey.RightArrow:
                     {
-                        GameState.ApplyUserInput(false);
+                        GameState.MoveTank(GameState.UserAction.Right);
                     }
                     break;
                 case ConsoleKey.LeftArrow:
                     {
-                        GameState.ApplyUserInput(false);
+                        GameState.MoveTank(GameState.UserAction.Left);
+                    }
+                    break;
+                case ConsoleKey.Spacebar:
+                    {
+                        GameState.ShootCannon();
                     }
                     break;
             }
@@ -53,6 +58,8 @@ static void PlayerInput()
 static void StartGame()
 {
     ScreenBuffer.DrawText(0, 0, "Press any key to start game loop");
+    GameState.AddTank();
+
     ScreenBuffer.DrawScreen();
     Console.ReadKey();
     GameState.StartGame();
@@ -63,4 +70,6 @@ static void StartGame()
         GameState.GameTick();
     }
 }
+
+
 
