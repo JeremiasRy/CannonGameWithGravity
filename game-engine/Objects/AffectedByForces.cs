@@ -51,7 +51,7 @@ public class AffectedByForces : GameObject
         }
         if (GroundCollision(Y + Height) && !(YForce < 0))
         {
-            Y = Console.WindowHeight - 1 - Height;
+            Y = Console.WindowHeight - Height;
             YForce = ReverseForce(YForce) / 2;
         } 
     }
