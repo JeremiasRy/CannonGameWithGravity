@@ -27,12 +27,24 @@ public class GameObject
 
     public virtual void Move(int x, int y)
     {
- 
+        X += x;
+        Y += y;
     }
     public static bool SideCollision(int x) => x <= 0 || x >= Console.WindowWidth - 1;
-
     public static bool GroundCollision(int y) => y >= Console.WindowHeight - 1;
 
+    public bool Collision(int x, int y)
+    {
+        for (int ix = X; ix < X + Width; x++)
+        {
+            for (int iy = Y; iy < Y + Height; y++)
+            {
+                if (x == ix && y == iy)
+                    return true;
+            }
+        }
+        return false;
+    }
     public GameObject(int id, string graphic)
     {
         Id = id;
