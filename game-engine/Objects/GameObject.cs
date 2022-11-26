@@ -17,8 +17,8 @@ public class GameObject
     /// The top position of obj
     /// </summary>
     public int Y { get; set; }
-    public bool OffScreenTop { get; set; }
-    public bool OffScreenSide { get; set; }
+    public bool OffScreenTop => Y < 0 || Y > Console.WindowHeight - 1;
+    public bool OffScreenSide => X < 0 || X + Width > Console.WindowWidth - 1;
 
     public int Height => Draw.Length;
     public int Width => Draw[0].Length;
@@ -27,8 +27,8 @@ public class GameObject
 
     public virtual void Move(int x, int y)
     {
-        X += x;
-        Y += y;
+        X = x;
+        Y = y;
     }
     public static bool SideCollision(int x) => x <= 0 || x >= Console.WindowWidth - 1;
     public static bool GroundCollision(int y) => y >= Console.WindowHeight - 1;
@@ -49,5 +49,12 @@ public class GameObject
     {
         Id = id;
         Draw = graphic.Split("|");
+    }
+    public GameObject(int id, string graphic, int x, int y)
+    {
+        Id = id;
+        Draw = graphic.Split("|");
+        X = x;
+        Y = y;
     }
 }

@@ -9,7 +9,6 @@ if (!OperatingSystem.IsWindows())
 }
 Console.SetWindowSize(200, 50);
 ScreenBuffer.Initialize();
-GameState.ShootCannon();
 
 Task game = new(StartGame);
 

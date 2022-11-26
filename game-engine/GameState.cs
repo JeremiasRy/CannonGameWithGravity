@@ -22,6 +22,10 @@ public static class GameState
             {
                 gravObj.Move(gravObj.XVelocity(), gravObj.YVelocity());
             }
+            if (gameObject is CannonShot shot)
+            {
+                shot.ShotTick();
+            }
             if (!gameObject.OffScreenTop && !gameObject.OffScreenSide)
             {
                 for (int i = 0; i < gameObject.Height; i++)
@@ -37,11 +41,17 @@ public static class GameState
     }
     public static void ShootCannon()
     {
-        _gameObjects.Add(new AffectedByForces(Tick, Graphics.Particle) { X = _player.X + _player.Width / 2, Y = _player.Y -1, YForce = -3000 - random.Next(3000), XForce = 5000 - random.Next(10000) });
+        var shot = new CannonShot(Tick, Graphics.Particle, _player.X + _player.Width / 2, _player.Y, 5000 - random.Next(10000), -5000 - random.Next(2000));
+        _gameObjects.Add(shot);
     }
     public static void AddTank()
     {
         _gameObjects.Add(_player);
+    }
+
+    public static void AddGameObj(GameObject obj)
+    {
+        _gameObjects.Add(obj);
     }
     public static void MoveTank(UserAction act)
     {

@@ -19,6 +19,9 @@ public class AffectedByForces : GameObject
     public int XForce { get; set; } = 0;
     public int YForce { get; set; } = 0;
 
+    public int XVelo { get; private set; }
+    public int YVelo { get; private set; }
+
     public int XVelocity()
     {
         if (GroundCollision(Y + Height))
@@ -26,12 +29,14 @@ public class AffectedByForces : GameObject
         else
             ApplyHorizontalForces(FRICTION_FORCE);
 
-        return CalculateSpeed(XForce);
+        XVelo = CalculateSpeed(XForce);
+        return XVelo;
     }
     public int YVelocity()
     {
         ApplyVerticalForces(GRAVITY_FORCE + FRICTION_FORCE);
-        return CalculateSpeed(YForce);
+        YVelo = CalculateSpeed(YForce);
+        return YVelo;
     }
 
     public override void Move(int x, int y)
@@ -49,8 +54,6 @@ public class AffectedByForces : GameObject
             Y = Console.WindowHeight - 1 - Height;
             YForce = ReverseForce(YForce) / 2;
         } 
-        OffScreenTop = Y < 0;
-        OffScreenSide = X < 0 || X + Width > Console.WindowWidth - 1;
     }
     void ApplyHorizontalForces(int frictionAmount)
     {
@@ -71,14 +74,14 @@ public class AffectedByForces : GameObject
         
     } 
 
-    static int CalculateSpeed(int force)
+    public static int CalculateSpeed(int force)
     {
         var speed = Math.Abs(force) / FORCE_TO_INCREASE_VELOCITY;
         speed = speed > MAX_VELOCITY ? MAX_VELOCITY : speed;
         return force < 0 ? 0 - speed : speed;
     }
 
-    static int ReverseForce(int force) => force < 0 ? Math.Abs(force) : 0 - force;
+    public static int ReverseForce(int force) => force < 0 ? Math.Abs(force) : 0 - force;
 
     public AffectedByForces(int id, string graphics) : base(id, graphics)
     {
