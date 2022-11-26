@@ -41,12 +41,6 @@ static void PlayerInput()
                 case ConsoleKey.Spacebar:
                     {
                         GameState.ConsecutiveKeyPresses++;
-                        if (GameState.ConsecutiveKeyPresses > 5)
-                        {
-                            GameState.ShootCannon();
-                            GameState.ConsecutiveKeyPresses = 0;
-                        }
-                        
                     }
                     break;
             }
@@ -54,6 +48,10 @@ static void PlayerInput()
         
     } else
     {
+        if (GameState.ConsecutiveKeyPresses > 0)
+        {
+            GameState.MoveTank(GameState.UserAction.Shoot);
+        }
         GameState.ConsecutiveKeyPresses = 0;
     }
 }

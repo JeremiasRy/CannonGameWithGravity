@@ -72,7 +72,7 @@ public static class GameState
     }
     public static void ShootCannon()
     {
-        _gameObjects.Add(new CannonShot(Tick, Graphics.Shot, _player.X + _player.Width / 2, _player.Y, 5000 - random.Next(10000), -5000 - random.Next(2000)));
+        _gameObjects.Add(new CannonShot(Tick, Graphics.Shot, _player.X + _player.Width / 2, _player.Y, 2500 - random.Next(5000), -250 * ConsecutiveKeyPresses));
     }
     public static void AddTank()
     {
