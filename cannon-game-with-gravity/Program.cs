@@ -19,7 +19,6 @@ static void PlayerInput()
 {
     if (KeyboardControl.KeyboardKeyDown(out List<ConsoleKey> keysPressed))
     {
-        GameState.ConsecutiveKeyPresses++;
         foreach (ConsoleKey key in keysPressed)
         {
             switch (key)
@@ -41,7 +40,13 @@ static void PlayerInput()
                     break;
                 case ConsoleKey.Spacebar:
                     {
-                        GameState.ShootCannon();
+                        GameState.ConsecutiveKeyPresses++;
+                        if (GameState.ConsecutiveKeyPresses > 5)
+                        {
+                            GameState.ShootCannon();
+                            GameState.ConsecutiveKeyPresses = 0;
+                        }
+                        
                     }
                     break;
             }

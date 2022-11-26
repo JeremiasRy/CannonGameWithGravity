@@ -7,10 +7,11 @@ public class CannonShot : AffectedByForces
     readonly int _birthday;
     readonly int _forceToReleaseX;
     readonly int _forceToReleaseY;
-    readonly List<GameObject> _shadow = new();
+    public readonly List<GameObject> Shadow = new();
     public bool Released { get; set; } = false;
+    public bool Explode => GameState.Tick - _birthday > 60;
 
-    public void ShotTick()
+    public void MoveShadow()
     {
         if (GameState.Tick - _birthday > 1 && !Released)
         {
@@ -19,12 +20,11 @@ public class CannonShot : AffectedByForces
             Released = true;
         } else
         {
-            for (int i = 0; i < _shadow.Count; i++)
+            for (int i = 0; i < Shadow.Count; i++)
             {
-                _shadow.ElementAt(i).Move(X - XVelo * i, Y - YVelo * i);
+                Shadow.ElementAt(i).Move(X - XVelo * i, Y - YVelo * i);
             }
         }
-
     }
 
     public CannonShot(int id, string graphic,int x, int y, int xForce, int yForce) : base(id, graphic)
@@ -36,8 +36,8 @@ public class CannonShot : AffectedByForces
         _birthday = GameState.Tick;
         for (int i = 0; i < Graphics.Shadow.Length; i++)
         {
-            _shadow.Add(new GameObject(_birthday + XForce + YForce, Graphics.Shadow[i]) { X = x, Y = y });
-            GameState.AddGameObj(_shadow.Last());
+            Shadow.Add(new GameObject(_birthday + XForce + YForce, Graphics.Shadow[i]) { X = x, Y = y });
+            GameState.AddGameObj(Shadow.Last());
         }
     }
 }
