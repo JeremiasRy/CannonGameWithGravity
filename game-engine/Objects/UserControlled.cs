@@ -19,7 +19,7 @@ public class UserControlled : AffectedByForces
         }
     }
 
-    public UserControlled(int id, string graphics) : base(id, graphics)
+    public UserControlled(int id, string graphics) : base(id, graphics, true)
     {
 
     }

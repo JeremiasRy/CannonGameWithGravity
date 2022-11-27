@@ -14,14 +14,20 @@ public static class GameState
     static readonly UserControlled _player = new(0, Graphics.Tank);
     public static void GameTick() //Call screen buffer here!
     {
-
         Tick++;
         List<GameObject> _markForDelete = new();
+        List<PositionRef> _positions = new();
+
+        _gameObjects.Where(gameObj => gameObj.IsSolid).ToList().ForEach(gameObj => _positions.AddRange(gameObj.Positions));
+        HandleCollisions(_positions.GroupBy(pos => pos.XY, new ArrayComparer()));
+        _positions.Clear();
+
         foreach (GameObject gameObject in _gameObjects)
         {
             if (gameObject is AffectedByForces gravObj)
             {
                 gravObj.Move(gravObj.XVelocity(), gravObj.YVelocity());
+
             }
             if (gameObject is CannonShot shot)
             {
@@ -44,13 +50,12 @@ public static class GameState
                     continue;
                 }
             }
-            if (!gameObject.OffScreenTop && !gameObject.OffScreenSide)
+            if (!gameObject.OffScreenTop && !gameObject.OffScreenSide && !gameObject.Hidden)
             {
                 for (int i = 0; i < gameObject.Height; i++)
                 {
                     ScreenBuffer.DrawText(gameObject.Y + i, gameObject.X, gameObject.Draw[i]);
                 }
-                
             }
         }
         if (_markForDelete.Any())
@@ -65,11 +70,27 @@ public static class GameState
             _gameObjects = _gameObjects.Where(x => !_markForDelete.Contains(x)).ToList();
         }
 
-        
         ScreenBuffer.DrawText(0, 0, $"Current tick {Tick} ConsecutiveKeyPresses: {ConsecutiveKeyPresses}");
         ScreenBuffer.DrawText(1, 0, $"User X: {_player.X} Y: {_player.Y} XForce: {_player.XForce} YForce: {_player.YForce}");
         ScreenBuffer.DrawScreen();
     }
+    static void HandleCollisions(IEnumerable<IGrouping<int[], PositionRef>> elements)
+    {
+        foreach (var positionGroupKey in elements)
+        {
+            if (positionGroupKey.Count() == 2)
+            {
+                var firstObjCollided = _gameObjects.Find(obj => obj.Id == positionGroupKey.ElementAt(0).Id);
+                var secondObjCollided = _gameObjects.Find(obj => obj.Id == positionGroupKey.ElementAt(1).Id);
+                if (firstObjCollided is not null && secondObjCollided is not null)
+                {
+                    GameObject.GameObjCollision(firstObjCollided, secondObjCollided);
+                }
+                
+            }
+        };
+    }
+
     public static void ShootCannon()
     {
         _gameObjects.Add(new CannonShot(Tick, Graphics.Shot, _player.X + _player.Width / 2, _player.Y, 2500 - random.Next(5000), -250 * ConsecutiveKeyPresses));

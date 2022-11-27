@@ -10,11 +10,11 @@ public class AffectedByForces : GameObject
 {
     // All this is for gravity
     // Negative forces go up and left positive down and right,
-    const int MAX_VELOCITY = 12;
-    const int GRAVITY_FORCE = 600;
-    const int FRICTION_FORCE = 12;
-    const int FORCE_TO_INCREASE_VELOCITY = 800;
-    const int FRICTION_FORCE_GROUND = 550;
+    public const int MAX_VELOCITY = 12;
+    public const int GRAVITY_FORCE = 600;
+    public const int FRICTION_FORCE = 12;
+    public const int FORCE_TO_INCREASE_VELOCITY = 800;
+    public const int FRICTION_FORCE_GROUND = 250;
     //Gravity ends here
     public int XForce { get; set; } = 0;
     public int YForce { get; set; } = 0;
@@ -71,7 +71,6 @@ public class AffectedByForces : GameObject
         {
             YForce += frictionAmount;
         }
-        
     } 
 
     public static int CalculateSpeed(int force)
@@ -83,8 +82,8 @@ public class AffectedByForces : GameObject
 
     public static int ReverseForce(int force) => force < 0 ? Math.Abs(force) : 0 - force;
 
-    public AffectedByForces(int id, string graphics) : base(id, graphics)
+    public AffectedByForces(int id, string graphics, bool solid) : base(id, graphics)
     {
-        
+        IsSolid = solid;
     }
 }
