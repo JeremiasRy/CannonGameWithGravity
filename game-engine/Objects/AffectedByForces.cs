@@ -14,7 +14,7 @@ public class AffectedByForces : GameObject
     public const int GRAVITY_FORCE = 600;
     public const int FRICTION_FORCE = 12;
     public const int FORCE_TO_INCREASE_VELOCITY = 800;
-    public const int FRICTION_FORCE_GROUND = 250;
+    public const int FRICTION_FORCE_GROUND = 500;
     //Gravity ends here
     public int XForce { get; set; } = 0;
     public int YForce { get; set; } = 0;
