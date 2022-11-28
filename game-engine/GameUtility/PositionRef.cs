@@ -8,11 +8,13 @@ namespace GameEngine.GameUtility;
 
 public class PositionRef
 {
-    public int[] XY { get; set; }
+    public int X { get; set; }
+    public int Y { get; set; }
     public int Id { get; set; }
-    public PositionRef(int[] xy, int id)
+    public PositionRef(int x, int y, int id)
     {
-        XY = xy;
+        X = x;
+        Y = y;
         Id = id;
     }
 }

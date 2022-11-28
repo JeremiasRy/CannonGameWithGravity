@@ -9,6 +9,21 @@ public static class GameState
     public static int Tick { get; private set; }
     public static bool Running { get; private set; }
     public static int ConsecutiveKeyPresses { get; set; } = 0;
+    public static List<PositionRef> GameMap()
+    {
+        var positions = new List<PositionRef>();
+        _gameObjects.Where(obj => obj.IsSolid).ToList().ForEach(obj => positions.AddRange(obj.Positions));
+        return positions;
+    }
+    public static GameObject? FindGameObj(int id)
+    {
+        GameObject? objToRtrn = _gameObjects.FirstOrDefault(obj => obj.Id == id);
+        if (objToRtrn is not null)
+        {
+            return objToRtrn;
+        }
+        return null;
+    }
 
     static List<GameObject> _gameObjects = new();
     static readonly UserControlled _player = new(0, Graphics.Tank);
@@ -17,10 +32,6 @@ public static class GameState
         Tick++;
         List<GameObject> _markForDelete = new();
         List<PositionRef> _positions = new();
-
-        _gameObjects.Where(gameObj => gameObj.IsSolid).ToList().ForEach(gameObj => _positions.AddRange(gameObj.Positions));
-        HandleCollisions(_positions.GroupBy(pos => pos.XY, new ArrayComparer()));
-        _positions.Clear();
 
         foreach (GameObject gameObject in _gameObjects)
         {
@@ -73,22 +84,6 @@ public static class GameState
         ScreenBuffer.DrawText(0, 0, $"Current tick {Tick} ConsecutiveKeyPresses: {ConsecutiveKeyPresses}");
         ScreenBuffer.DrawText(1, 0, $"User X: {_player.X} Y: {_player.Y} XForce: {_player.XForce} YForce: {_player.YForce}");
         ScreenBuffer.DrawScreen();
-    }
-    static void HandleCollisions(IEnumerable<IGrouping<int[], PositionRef>> elements)
-    {
-        foreach (var positionGroupKey in elements)
-        {
-            if (positionGroupKey.Count() == 2)
-            {
-                var firstObjCollided = _gameObjects.Find(obj => obj.Id == positionGroupKey.ElementAt(0).Id);
-                var secondObjCollided = _gameObjects.Find(obj => obj.Id == positionGroupKey.ElementAt(1).Id);
-                if (firstObjCollided is not null && secondObjCollided is not null)
-                {
-                    GameObject.GameObjCollision(firstObjCollided, secondObjCollided);
-                }
-                
-            }
-        };
     }
 
     public static void ShootCannon()

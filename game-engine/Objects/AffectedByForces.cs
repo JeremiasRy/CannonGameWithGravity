@@ -54,6 +54,10 @@ public class AffectedByForces : GameObject
             Y = Console.WindowHeight - Height;
             YForce = ReverseForce(YForce) / 2;
         } 
+        if (GameObjCollision())
+        {
+            var jausers = "jausers";
+        }
     }
     void ApplyHorizontalForces(int frictionAmount)
     {
@@ -78,6 +82,38 @@ public class AffectedByForces : GameObject
         var speed = Math.Abs(force) / FORCE_TO_INCREASE_VELOCITY;
         speed = speed > MAX_VELOCITY ? MAX_VELOCITY : speed;
         return force < 0 ? 0 - speed : speed;
+    }
+    public bool GameObjCollision()
+    {
+        var mapWithoutMe = GameState.GameMap().Where(posRef => posRef.Id != Id);
+        foreach (var position in mapWithoutMe)
+        {
+            for (int i = 0; i < Positions.Count; i++)
+            {
+                if ((position.X + 1 == Positions[i].X && position.Y == Positions[i].Y) || (position.X - 1 == Positions[i].X && position.Y == Positions[i].Y))
+                {
+                    var gameObjCollided = GameState.FindGameObj(position.Id);
+                    if (gameObjCollided != null && gameObjCollided is AffectedByForces gravObj)
+                    {
+                        if (Math.Abs(gravObj.XForce) > Math.Abs(XForce)) //Handle vertical forces
+                        {
+                            XForce = gravObj.XForce;
+                            gravObj.XForce /= 2;
+                            
+                        } else
+                        {
+                         
+                            gravObj.XForce = XForce;
+
+                            XForce /= 2;
+                        }
+                    }
+                }
+            }
+                
+        }
+        return true;
+
     }
 
     public static int ReverseForce(int force) => force < 0 ? Math.Abs(force) : 0 - force;
