@@ -26,13 +26,14 @@ public class CannonShot : AffectedByForces
             for (int i = 0; i < Shadow.Count; i++)
             {
                 var shdwEl = Shadow[i];
-                if (XForce + YForce < FORCE_TO_INCREASE_VELOCITY * 2)
-                {
-                    shdwEl.Hidden = true;
-                } else
+                if (Math.Abs(YSpeed) > 1 || Math.Abs(XSpeed) > 1)
                 {
                     shdwEl.Hidden = false;
-                    shdwEl.Move(X - XVelo * i, Y - YVelo * i);
+                    shdwEl.Move(X - XSpeed * i, Y - YSpeed * i);
+                } else
+                {
+                    shdwEl.Hidden = true;
+                    
                 }                
             }
         }

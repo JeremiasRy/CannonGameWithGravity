@@ -32,12 +32,15 @@ public static class GameState
         Tick++;
         List<GameObject> _markForDelete = new();
         List<PositionRef> _positions = new();
+        int count = 1;
 
         foreach (GameObject gameObject in _gameObjects)
         {
             if (gameObject is AffectedByForces gravObj)
             {
                 gravObj.Move(gravObj.XVelocity(), gravObj.YVelocity());
+                ScreenBuffer.DrawText(count, 0, gravObj.ToString()); //For debugging and analyzing
+                count++;
 
             }
             if (gameObject is CannonShot shot)
@@ -82,7 +85,6 @@ public static class GameState
         }
 
         ScreenBuffer.DrawText(0, 0, $"Current tick {Tick} ConsecutiveKeyPresses: {ConsecutiveKeyPresses}");
-        ScreenBuffer.DrawText(1, 0, $"User X: {_player.X} Y: {_player.Y} XForce: {_player.XForce} YForce: {_player.YForce}");
         ScreenBuffer.DrawScreen();
     }
 
@@ -117,11 +119,11 @@ public static class GameState
                 } break;
             case UserAction.Left:
                 {
-                    _player.UserMovement(-800, false);
+                    _player.UserMovement(-600, false);
                 } break;
             case UserAction.Right:
                 {
-                    _player.UserMovement(800, false);
+                    _player.UserMovement(600, false);
                 } break;
             case UserAction.Shoot:
                 {
