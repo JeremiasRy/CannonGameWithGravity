@@ -14,15 +14,36 @@ public class AffectedByForces : GameObject
     public const int GRAVITY_FORCE = 600;
     public const int FRICTION_FORCE = 12;
     public const int FORCE_TO_INCREASE_VERTICAL_VELOCITY = 800;
-    public const int FORCE_TO_INCREAZE_HORIZONTAL_VELOCITY = 300;
+    public const int FORCE_TO_INCREASE_HORIZONTAL_VELOCITY = 300;
     public const int FRICTION_FORCE_GROUND = 500;
     //Gravity ends here
     public int XForce { get; set; } = 0;
     public int YForce { get; set; } = 0;
-
     public int XSpeed { get; private set; }
     public int YSpeed { get; private set; }
 
+    public List<Directions> Movement { get 
+        {
+            var list = new List<Directions>();
+            if (Math.Abs(XForce) < FORCE_TO_INCREASE_HORIZONTAL_VELOCITY && Math.Abs(YForce) < FORCE_TO_INCREASE_VERTICAL_VELOCITY)
+            {
+                list.Add(Directions.Stationary);
+                return list;
+            }
+            if (Math.Abs(XForce) > FORCE_TO_INCREASE_HORIZONTAL_VELOCITY)
+                if (XForce < 0)
+                    list.Add(Directions.Left);
+                else
+                    list.Add(Directions.Right);
+            if (Math.Abs(YForce) > FORCE_TO_INCREASE_VERTICAL_VELOCITY)
+                if (YForce < 0)
+                    list.Add(Directions.Up);
+                else
+                    list.Add(Directions.Down);
+
+            return list;
+
+        } }
     public int XVelocity()
     {
         if (GroundCollision(Y + Height))
@@ -48,7 +69,7 @@ public class AffectedByForces : GameObject
         if ((SideCollision(X) || SideCollision(X + Width)))
         {
             X = X < Console.WindowWidth / 2 ? 0 : Console.WindowWidth - 1 - Width;
-            XForce = Math.Abs(XForce) > FORCE_TO_INCREASE_VERTICAL_VELOCITY ? ReverseForce(XForce) / 2 : XForce;
+            XForce = Math.Abs(XForce) > FORCE_TO_INCREASE_HORIZONTAL_VELOCITY ? ReverseForce(XForce) / 2 : XForce;
         }
         if (GroundCollision(Y + Height) && !(YForce < 0))
         {
@@ -80,7 +101,7 @@ public class AffectedByForces : GameObject
 
     public static int CalculateSpeed(int force, bool vertical)
     {
-        var speed = Math.Abs(force) / (vertical ? FORCE_TO_INCREASE_VERTICAL_VELOCITY : FORCE_TO_INCREAZE_HORIZONTAL_VELOCITY);
+        var speed = Math.Abs(force) / (vertical ? FORCE_TO_INCREASE_VERTICAL_VELOCITY : FORCE_TO_INCREASE_HORIZONTAL_VELOCITY);
         speed = speed > MAX_VELOCITY ? MAX_VELOCITY : speed;
         return force < 0 ? 0 - speed : speed;
     }
@@ -91,7 +112,8 @@ public class AffectedByForces : GameObject
         {
             for (int i = 0; i < Positions.Count; i++)
             {
-                if ((position.X == Positions[i].X && position.Y == Positions[i].Y) || (position.X == Positions[i].X && position.Y == Positions[i].Y))
+                var nextTickPos = Positions[i].X + XSpeed;
+                if ((position.X + 1 == Positions[i].X && position.Y == Positions[i].Y) || (position.X - 1 == Positions[i].X && position.Y == Positions[i].Y))
                 {
                     var gameObjCollided = GameState.FindGameObj(position.Id);
                     if (gameObjCollided != null && gameObjCollided is AffectedByForces gravObj)
@@ -101,20 +123,20 @@ public class AffectedByForces : GameObject
                             X += X <= gravObj.X ? -1 : 1;
                             XForce = gravObj.XForce;
                             gravObj.XForce /= 2;
-                            
-                        } else
+
+                        }
+                        else
                         {
-                            gravObj.X += gravObj.X <= X ? -1 : 1; 
+                            gravObj.X += gravObj.X <= X ? -1 : 1;
                             gravObj.XForce = XForce;
                             XForce /= 2;
                         }
                     }
                 }
             }
-                
+            return true;
         }
-        return true;
-
+        return false;
     }
 
     public static int ReverseForce(int force) => force < 0 ? Math.Abs(force) : 0 - force;
@@ -125,4 +147,13 @@ public class AffectedByForces : GameObject
     {
         IsSolid = solid;
     }
+}
+
+public enum Directions
+{
+    Up,
+    Down,
+    Left,
+    Right,
+    Stationary,
 }

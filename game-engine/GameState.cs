@@ -39,7 +39,14 @@ public static class GameState
             if (gameObject is AffectedByForces gravObj)
             {
                 gravObj.Move(gravObj.XVelocity(), gravObj.YVelocity());
-                ScreenBuffer.DrawText(count, 0, gravObj.ToString()); //For debugging and analyzing
+                ScreenBuffer.DrawText(count, 0, gravObj.ToString());
+                //For debugging and analyzing
+                var dirCount = 1;
+                foreach (Directions direction in gravObj.Movement)
+                {
+                    ScreenBuffer.DrawText(count + dirCount, 0, direction.ToString());
+                    dirCount++;
+                }
                 count++;
 
             }
