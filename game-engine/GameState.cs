@@ -20,7 +20,18 @@ public static class GameState
             {
                 if (gameObj.IsSolid && gameObj is AffectedByForces)
                 {
-                    result.Add(new[] { gameObj.X, gameObj.Y, gameObj.Id });
+                    for (int ix = 0; ix < gameObj.Width; ix++)
+                    {
+                        for (int iy = 0; iy < gameObj.Height; iy++)
+                        {
+                            if (gameObj.Draw[iy][ix] != ' ')
+                            {
+                                result.Add(new[] { gameObj.X + ix, gameObj.Y + iy, gameObj.Id });
+                            }
+                            
+                        }
+                    }
+                    
                 }
             }
             return result;

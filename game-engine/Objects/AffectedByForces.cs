@@ -108,33 +108,52 @@ public class AffectedByForces : GameObject
     public bool GameObjCollision()
     {
         var mapWithoutMe = GameState.GameObjectsOnMap.Where(arr => arr[^1] != Id);
-        foreach (Directions dir in Movement)
+        if (!mapWithoutMe.Any())
+            return false;
+
+        var objectCollision = mapWithoutMe.FirstOrDefault(arr => arr[0] == X || arr[1] == Y);
+        if (objectCollision is null)
+            return false;
+
+        var gameObject = GameState.FindGameObj(objectCollision[^1]);
+
+        if (gameObject is not null)
         {
-            switch (dir) 
+            foreach (Directions dir in Movement)
             {
-                case Directions.Left:
-                    {
+                switch (dir)
+                {
+                    case Directions.Left:
+                        {
 
 
-                    } break;
-                case Directions.Right:
-                    {
+                        }
+                        break;
+                    case Directions.Right:
+                        {
 
-                    } break;
-                case Directions.Up:
-                    {
+                        }
+                        break;
+                    case Directions.Up:
+                        {
 
-                    } break;
-                case Directions.Down:
-                    {
+                        }
+                        break;
+                    case Directions.Down:
+                        {
 
-                    } break;
-                case Directions.Stationary:
-                    {
-                        return false;
-                    } 
+                        }
+                        break;
+                    case Directions.Stationary:
+                        {
+                            return false;
+                        }
+                }
             }
+
         }
+
+        
         return false;
     }
 
