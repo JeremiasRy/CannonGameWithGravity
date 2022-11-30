@@ -10,8 +10,7 @@ public class CannonShot : AffectedByForces
     public readonly List<GameObject> Shadow = new();
     public bool Released { get; set; } = false;
     private bool _explode = false;
-    public bool Explode { get {
-            if (!_explode) return GameState.Tick - _birthday > 150; else return _explode; } set { _explode = value; } }
+    public bool Explode { get { if (!_explode) return GameState.Tick - _birthday > 10000; else return _explode; } set { _explode = value; } }
 
     public void MoveShadow()
     {

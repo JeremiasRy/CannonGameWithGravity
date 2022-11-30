@@ -36,23 +36,6 @@ public class GameObject
     public static bool SideCollision(int x) => x <= 0 || x >= Console.WindowWidth - 1;
     public static bool GroundCollision(int y) => y >= Console.WindowHeight - 1;
 
-    public List<PositionRef> Positions
-    {
-        get
-        {
-            var positions = new List<PositionRef>();
-            for (int iy = 0; iy < Height; iy++)
-            {
-                for (int ix = 0; ix < Width; ix++)
-                {
-                    var line = Draw[iy].ToCharArray();
-                    if (line[ix] != ' ')
-                        positions.Add(new PositionRef(X + ix, Y + iy, Id));
-                }
-            }
-            return positions;
-        }
-    }
     public GameObject(int id, string graphic)
     {
         Id = id;

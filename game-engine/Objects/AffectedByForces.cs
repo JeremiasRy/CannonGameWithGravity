@@ -14,7 +14,7 @@ public class AffectedByForces : GameObject
     public const int GRAVITY_FORCE = 600;
     public const int FRICTION_FORCE = 12;
     public const int FORCE_TO_INCREASE_VERTICAL_VELOCITY = 800;
-    public const int FORCE_TO_INCREASE_HORIZONTAL_VELOCITY = 300;
+    public const int FORCE_TO_INCREASE_HORIZONTAL_VELOCITY = 500;
     public const int FRICTION_FORCE_GROUND = 500;
     //Gravity ends here
     public int XForce { get; set; } = 0;
@@ -107,34 +107,33 @@ public class AffectedByForces : GameObject
     }
     public bool GameObjCollision()
     {
-        var mapWithoutMe = GameState.GameMap().Where(posRef => posRef.Id != Id);
-        foreach (var position in mapWithoutMe)
+        var mapWithoutMe = GameState.GameObjectsOnMap.Where(arr => arr[^1] != Id);
+        foreach (Directions dir in Movement)
         {
-            for (int i = 0; i < Positions.Count; i++)
+            switch (dir) 
             {
-                var nextTickPos = Positions[i].X + XSpeed;
-                if ((position.X + 1 == Positions[i].X && position.Y == Positions[i].Y) || (position.X - 1 == Positions[i].X && position.Y == Positions[i].Y))
-                {
-                    var gameObjCollided = GameState.FindGameObj(position.Id);
-                    if (gameObjCollided != null && gameObjCollided is AffectedByForces gravObj)
+                case Directions.Left:
                     {
-                        if (Math.Abs(gravObj.XForce) > Math.Abs(XForce)) //Handle horizontal forces
-                        {
-                            X += X <= gravObj.X ? -1 : 1;
-                            XForce = gravObj.XForce;
-                            gravObj.XForce /= 2;
 
-                        }
-                        else
-                        {
-                            gravObj.X += gravObj.X <= X ? -1 : 1;
-                            gravObj.XForce = XForce;
-                            XForce /= 2;
-                        }
-                    }
-                }
+
+                    } break;
+                case Directions.Right:
+                    {
+
+                    } break;
+                case Directions.Up:
+                    {
+
+                    } break;
+                case Directions.Down:
+                    {
+
+                    } break;
+                case Directions.Stationary:
+                    {
+                        return false;
+                    } 
             }
-            return true;
         }
         return false;
     }

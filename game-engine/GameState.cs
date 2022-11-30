@@ -9,12 +9,23 @@ public static class GameState
     public static int Tick { get; private set; }
     public static bool Running { get; private set; }
     public static int ConsecutiveKeyPresses { get; set; } = 0;
-    public static List<PositionRef> GameMap()
-    {
-        var positions = new List<PositionRef>();
-        _gameObjects.Where(obj => obj.IsSolid).ToList().ForEach(obj => positions.AddRange(obj.Positions));
-        return positions;
-    }
+
+    /// <summary>
+    /// list of array of ints containing in order X position, Y position, Object id
+    /// </summary>
+    public static List<int[]> GameObjectsOnMap { get 
+        {
+            List<int[]> result = new();
+            foreach (var gameObj in _gameObjects)
+            {
+                if (gameObj.IsSolid && gameObj is AffectedByForces)
+                {
+                    result.Add(new[] { gameObj.X, gameObj.Y, gameObj.Id });
+                }
+            }
+            return result;
+        } }
+
     public static GameObject? FindGameObj(int id)
     {
         GameObject? objToRtrn = _gameObjects.FirstOrDefault(obj => obj.Id == id);
@@ -31,7 +42,6 @@ public static class GameState
     {
         Tick++;
         List<GameObject> _markForDelete = new();
-        List<PositionRef> _positions = new();
         int count = 1;
 
         foreach (GameObject gameObject in _gameObjects)
