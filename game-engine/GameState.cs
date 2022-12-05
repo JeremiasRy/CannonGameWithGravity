@@ -18,20 +18,16 @@ public static class GameState
             List<int[]> result = new();
             foreach (var gameObj in _gameObjects)
             {
-                if (gameObj.IsSolid && gameObj is AffectedByForces)
+                if (!gameObj.IsSolid && gameObj is not AffectedByForces)
+                    continue;
+
+                for (int ix = 0; ix < gameObj.Width; ix++)
                 {
-                    for (int ix = 0; ix < gameObj.Width; ix++)
+                    for (int iy = 0; iy < gameObj.Height; iy++)
                     {
-                        for (int iy = 0; iy < gameObj.Height; iy++)
-                        {
-                            if (gameObj.Draw[iy][ix] != ' ')
-                            {
-                                result.Add(new[] { gameObj.X + ix, gameObj.Y + iy, gameObj.Id });
-                            }
-                            
-                        }
+                        if (gameObj.Draw[iy][ix] != ' ')    
+                            result.Add(new[] { gameObj.X + ix, gameObj.Y + iy, gameObj.Id });
                     }
-                    
                 }
             }
             return result;

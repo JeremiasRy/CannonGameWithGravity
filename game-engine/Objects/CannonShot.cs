@@ -10,7 +10,7 @@ public class CannonShot : AffectedByForces
     public readonly List<GameObject> Shadow = new();
     public bool Released { get; set; } = false;
     private bool _explode = false;
-    public bool Explode { get { if (!_explode) return GameState.Tick - _birthday > 10000; else return _explode; } set { _explode = value; } }
+    public bool Explode { get { if (!_explode) return GameState.Tick - _birthday > 60; else return _explode; } set { _explode = value; } }
 
     public void MoveShadow()
     {
@@ -21,7 +21,6 @@ public class CannonShot : AffectedByForces
             Released = true;
         } else
         {
-
             for (int i = 0; i < Shadow.Count; i++)
             {
                 var shdwEl = Shadow[i];
@@ -32,7 +31,6 @@ public class CannonShot : AffectedByForces
                 } else
                 {
                     shdwEl.Hidden = true;
-                    
                 }                
             }
         }

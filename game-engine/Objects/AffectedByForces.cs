@@ -76,9 +76,13 @@ public class AffectedByForces : GameObject
             Y = Console.WindowHeight - Height;
             YForce = ReverseForce(YForce) / 2;
         } 
-        if (GameObjCollision())
+        if (GameObjCollision(out AffectedByForces? collidedObj) && collidedObj is not null)
         {
-            var jausers = "jausers";
+            XForce += collidedObj.XForce < 0 ? collidedObj.XForce - FORCE_TO_INCREASE_HORIZONTAL_VELOCITY : collidedObj.XForce + FORCE_TO_INCREASE_HORIZONTAL_VELOCITY;
+            YForce += collidedObj.YForce < 0 ? collidedObj.YForce + FORCE_TO_INCREASE_VERTICAL_VELOCITY : collidedObj.YForce - FORCE_TO_INCREASE_VERTICAL_VELOCITY;
+            collidedObj.XForce /= 2;
+            collidedObj.YForce /= 2;
+
         }
     }
     void ApplyHorizontalForces(int frictionAmount)
@@ -105,56 +109,22 @@ public class AffectedByForces : GameObject
         speed = speed > MAX_VELOCITY ? MAX_VELOCITY : speed;
         return force < 0 ? 0 - speed : speed;
     }
-    public bool GameObjCollision()
+    public bool GameObjCollision(out AffectedByForces? collisionObj)
     {
+        collisionObj = null;
         var mapWithoutMe = GameState.GameObjectsOnMap.Where(arr => arr[^1] != Id);
         if (!mapWithoutMe.Any())
             return false;
 
-        var objectCollision = mapWithoutMe.FirstOrDefault(arr => arr[0] == X || arr[1] == Y);
+        var objectCollision = mapWithoutMe.FirstOrDefault(arr => arr[0] == X && arr[1] == Y);
         if (objectCollision is null)
             return false;
 
-        var gameObject = GameState.FindGameObj(objectCollision[^1]);
+        collisionObj = GameState.FindGameObj(objectCollision[^1]) as AffectedByForces;
 
-        if (gameObject is not null)
-        {
-            foreach (Directions dir in Movement)
-            {
-                switch (dir)
-                {
-                    case Directions.Left:
-                        {
-
-
-                        }
-                        break;
-                    case Directions.Right:
-                        {
-
-                        }
-                        break;
-                    case Directions.Up:
-                        {
-
-                        }
-                        break;
-                    case Directions.Down:
-                        {
-
-                        }
-                        break;
-                    case Directions.Stationary:
-                        {
-                            return false;
-                        }
-                }
-            }
-
-        }
-
-        
-        return false;
+        if (collisionObj is null)
+            throw new Exception(message: "Can't find collided object from gameobjects");
+        return true;
     }
 
     public static int ReverseForce(int force) => force < 0 ? Math.Abs(force) : 0 - force;
