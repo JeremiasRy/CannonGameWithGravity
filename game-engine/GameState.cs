@@ -52,7 +52,7 @@ public static class GameState
         List<GameObject> _markForDelete = new();
         int count = 1;
         _player.AimCursorRef.Move(_player.X, _player.Y);
-        ScreenBuffer.DrawText(10, 0, _player.AimCursorRef.ToString());
+        ScreenBuffer.DrawText(0, Console.WindowWidth / 2, _player.AimCursorRef.ToString());
 
         foreach (GameObject gameObject in _gameObjects)
         {
@@ -156,11 +156,15 @@ public static class GameState
                 } break;
             case UserAction.Left:
                 {
-                    _player.UserMovement(-600);
+                    _player.UserMovement(-600, false);
                 } break;
             case UserAction.Right:
                 {
-                    _player.UserMovement(600);
+                    _player.UserMovement(600, false);
+                } break;
+            case UserAction.Jump:
+                {
+                    _player.UserMovement(-3000, true);
                 } break;
             case UserAction.Shoot:
                 {
@@ -180,6 +184,7 @@ public static class GameState
         Right,
         Up,
         Down,
+        Jump,
         Shoot
     }
 }

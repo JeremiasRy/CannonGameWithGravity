@@ -48,6 +48,11 @@ static void PlayerInput()
                         GameState.ConsecutiveKeyPresses++;
                     }
                     break;
+                case ConsoleKey.J:
+                    {
+                        GameState.UserInput(GameState.UserAction.Jump);
+                    }
+                    break;
             }
         }
         
