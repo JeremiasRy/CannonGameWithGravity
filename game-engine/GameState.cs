@@ -120,6 +120,8 @@ public static class GameState
         int verticalForce = (int)Math.Round(totalForce * (_player.AimCursorRef.Angle / 90));
         int horizontalForce = (int)Math.Round(totalForce *  (1 - (_player.AimCursorRef.Angle / 90)));
         _gameObjects.Add(new CannonShot(Tick, Graphics.Shot, _player.X, Console.WindowHeight - _player.Height, _player.AimCursorRef.DirectionLeft ? horizontalForce : 0 - horizontalForce, verticalForce));
+        _player.XForce += _player.AimCursorRef.DirectionLeft ? 0 - horizontalForce / 2 : horizontalForce / 2; 
+        _player.YForce += AffectedByForces.ReverseForce(verticalForce);
     }
     public static void AddTank()
     {
