@@ -15,7 +15,5 @@ public static class Graphics
             return _particles[GameState.random.Next(0, _particles.Length - 1)];
         } }
     public static string[] Shadow { get; set; } = new[] { "\u2592", "\u2591" };
-
-
-
+    public static string AimCursor { get; set; } = "  \u2588  |-- --|  \u2588  ";
 }

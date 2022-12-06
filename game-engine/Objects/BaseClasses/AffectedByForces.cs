@@ -40,9 +40,7 @@ public class AffectedByForces : GameObject
                     list.Add(Directions.Up);
                 else
                     list.Add(Directions.Down);
-
             return list;
-
         } }
     public int XVelocity()
     {

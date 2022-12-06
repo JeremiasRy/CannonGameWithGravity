@@ -44,12 +44,15 @@ public static class GameState
     }
 
     static List<GameObject> _gameObjects = new();
-    static readonly UserControlled _player = new(0, Graphics.Tank);
+    static readonly AimCursor _aimCursor = new (1, Graphics.AimCursor);
+    static readonly UserControlled _player = new(0, Graphics.Tank, _aimCursor);
     public static void GameTick() //Call screen buffer here!
     {
         Tick++;
         List<GameObject> _markForDelete = new();
         int count = 1;
+        _aimCursor.Move(_player.X, _player.Y);
+        ScreenBuffer.DrawText(10, 0, _aimCursor.ToString());
 
         foreach (GameObject gameObject in _gameObjects)
         {
@@ -65,7 +68,6 @@ public static class GameState
                     dirCount++;
                 }
                 count++;
-
             }
             if (gameObject is CannonShot shot)
             {
@@ -114,11 +116,15 @@ public static class GameState
 
     public static void ShootCannon()
     {
-        _gameObjects.Add(new CannonShot(Tick, Graphics.Shot, _player.X + _player.Width / 2, _player.Y, 2500 - random.Next(5000), -250 * ConsecutiveKeyPresses));
+        int totalForce = -500 * ConsecutiveKeyPresses;
+        int verticalForce = (int)Math.Round(totalForce * (_aimCursor.Angle / 90));
+        int horizontalForce = (int)Math.Round(totalForce *  (1 - (_aimCursor.Angle / 90)));
+        _gameObjects.Add(new CannonShot(Tick, Graphics.Shot, _player.X, Console.WindowHeight - _player.Height, _aimCursor.DirectionLeft ? horizontalForce : 0 - horizontalForce, verticalForce));
     }
     public static void AddTank()
     {
         _gameObjects.Add(_player);
+        _gameObjects.Add(_aimCursor);
     }
 
     public static void AddGameObj(GameObject obj)
@@ -133,21 +139,25 @@ public static class GameState
             _gameObjects.Add(new Explosion(Tick * shotId + i, Graphics.Particle, x, y));
         }
     }
-    public static void MoveTank(UserAction act)
+    public static void UserInput(UserAction act)
     {
         switch (act)
         {
             case UserAction.Up:
                 {
-                    _player.UserMovement(-800, true);
+                    _aimCursor.ChangeAngle(+1);
+                } break;
+            case UserAction.Down:
+                {
+                    _aimCursor.ChangeAngle(-1);
                 } break;
             case UserAction.Left:
                 {
-                    _player.UserMovement(-600, false);
+                    _player.UserMovement(-600);
                 } break;
             case UserAction.Right:
                 {
-                    _player.UserMovement(600, false);
+                    _player.UserMovement(600);
                 } break;
             case UserAction.Shoot:
                 {
@@ -166,6 +176,7 @@ public static class GameState
         Left,
         Right,
         Up,
+        Down,
         Shoot
     }
 }

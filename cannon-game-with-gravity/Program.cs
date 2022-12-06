@@ -25,17 +25,22 @@ static void PlayerInput()
             {
                 case ConsoleKey.UpArrow: 
                     {
-                        GameState.MoveTank(GameState.UserAction.Up);
+                        GameState.UserInput(GameState.UserAction.Up);
                     } 
+                    break;
+                case ConsoleKey.DownArrow:
+                    {
+                        GameState.UserInput(GameState.UserAction.Down);
+                    }
                     break;
                 case ConsoleKey.RightArrow:
                     {
-                        GameState.MoveTank(GameState.UserAction.Right);
+                        GameState.UserInput(GameState.UserAction.Right);
                     }
                     break;
                 case ConsoleKey.LeftArrow:
                     {
-                        GameState.MoveTank(GameState.UserAction.Left);
+                        GameState.UserInput(GameState.UserAction.Left);
                     }
                     break;
                 case ConsoleKey.Spacebar:
@@ -50,7 +55,7 @@ static void PlayerInput()
     {
         if (GameState.ConsecutiveKeyPresses > 0)
         {
-            GameState.MoveTank(GameState.UserAction.Shoot);
+            GameState.UserInput(GameState.UserAction.Shoot);
         }
         GameState.ConsecutiveKeyPresses = 0;
     }

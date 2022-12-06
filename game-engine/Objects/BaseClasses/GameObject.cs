@@ -18,7 +18,7 @@ public class GameObject
     /// The top position of obj
     /// </summary>
     public int Y { get; set; }
-    public bool OffScreenTop => Y < 0 || Y > Console.WindowHeight - 1;
+    public bool OffScreenTop => Y < 0 || Y + Height -1 > Console.WindowHeight - 1;
     public bool OffScreenSide => X < 0 || X + Width > Console.WindowWidth - 1;
     public bool Hidden { get; set; } = false;
     public bool IsSolid { get; set; } = false;
