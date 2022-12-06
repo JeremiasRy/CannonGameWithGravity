@@ -11,6 +11,15 @@ public class AimCursor : GameObject
     public bool DirectionLeft { get; set; }
     public double Angle { get; private set; } = 45;
     readonly int _radius = 15;
+    public int Radius()
+    {
+        if (GameState.ConsecutiveKeyPresses == 0)
+            return _radius;
+        else
+            return GameState.ConsecutiveKeyPresses;
+
+    }
+    readonly int _tankRef;
     
     public void ChangeAngle(int angle)
     {
@@ -22,10 +31,11 @@ public class AimCursor : GameObject
     public override void Move(int x, int y)
     {
         double radians = (DirectionLeft ? 180 + Angle : 360 - Angle) * Math.PI / 180;
-        base.Move((int)Math.Round(_radius * Math.Cos(radians) + x), (int)Math.Round(_radius * Math.Sin(radians) + y));
+        base.Move((int)Math.Round(Radius() * Math.Cos(radians) + x), (int)Math.Round(Radius() * Math.Sin(radians) + y));
     }
     public override string ToString() => $"Angle: {Angle}, X: {X}, Y: {Y}";
-    public AimCursor(int id, string graphic) : base(id, graphic)
-    {
+    public AimCursor(int id, string graphic, int tankref) : base(id, graphic)
+    {   
+        _tankRef = tankref;
     }
 }

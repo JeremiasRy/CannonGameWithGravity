@@ -44,15 +44,15 @@ public static class GameState
     }
 
     static List<GameObject> _gameObjects = new();
-    static readonly AimCursor _aimCursor = new (1, Graphics.AimCursor);
-    static readonly UserControlled _player = new(0, Graphics.Tank, _aimCursor);
+    static readonly UserControlled _player = new(0, Graphics.Tank, new AimCursor(1, Graphics.AimCursor, 0));
+
     public static void GameTick() //Call screen buffer here!
     {
         Tick++;
         List<GameObject> _markForDelete = new();
         int count = 1;
-        _aimCursor.Move(_player.X, _player.Y);
-        ScreenBuffer.DrawText(10, 0, _aimCursor.ToString());
+        _player.AimCursorRef.Move(_player.X, _player.Y);
+        ScreenBuffer.DrawText(10, 0, _player.AimCursorRef.ToString());
 
         foreach (GameObject gameObject in _gameObjects)
         {
@@ -116,15 +116,15 @@ public static class GameState
 
     public static void ShootCannon()
     {
-        int totalForce = -500 * ConsecutiveKeyPresses;
-        int verticalForce = (int)Math.Round(totalForce * (_aimCursor.Angle / 90));
-        int horizontalForce = (int)Math.Round(totalForce *  (1 - (_aimCursor.Angle / 90)));
-        _gameObjects.Add(new CannonShot(Tick, Graphics.Shot, _player.X, Console.WindowHeight - _player.Height, _aimCursor.DirectionLeft ? horizontalForce : 0 - horizontalForce, verticalForce));
+        int totalForce = -250 * ConsecutiveKeyPresses;
+        int verticalForce = (int)Math.Round(totalForce * (_player.AimCursorRef.Angle / 90));
+        int horizontalForce = (int)Math.Round(totalForce *  (1 - (_player.AimCursorRef.Angle / 90)));
+        _gameObjects.Add(new CannonShot(Tick, Graphics.Shot, _player.X, Console.WindowHeight - _player.Height, _player.AimCursorRef.DirectionLeft ? horizontalForce : 0 - horizontalForce, verticalForce));
     }
     public static void AddTank()
     {
         _gameObjects.Add(_player);
-        _gameObjects.Add(_aimCursor);
+        _gameObjects.Add(_player.AimCursorRef);
     }
 
     public static void AddGameObj(GameObject obj)
@@ -139,17 +139,18 @@ public static class GameState
             _gameObjects.Add(new Explosion(Tick * shotId + i, Graphics.Particle, x, y));
         }
     }
+    
     public static void UserInput(UserAction act)
     {
         switch (act)
         {
             case UserAction.Up:
                 {
-                    _aimCursor.ChangeAngle(+1);
+                    _player.AimCursorRef.ChangeAngle(+2);
                 } break;
             case UserAction.Down:
                 {
-                    _aimCursor.ChangeAngle(-1);
+                    _player.AimCursorRef.ChangeAngle(-2);
                 } break;
             case UserAction.Left:
                 {

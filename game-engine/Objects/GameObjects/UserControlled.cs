@@ -8,19 +8,19 @@ namespace GameEngine.Objects;
 
 public class UserControlled : AffectedByForces
 {
-    readonly AimCursor _aimCursorRef;
+    public readonly AimCursor AimCursorRef;
     public void UserMovement(int amount)
     {
-        _aimCursorRef.DirectionLeft = amount < 0;
+        AimCursorRef.DirectionLeft = amount < 0;
         XForce += amount;
     }
     public void MoveAimCursor()
     {
-        _aimCursorRef.Move(X, Y);
+        AimCursorRef.Move(X, Y);
     }
 
     public UserControlled(int id, string graphics, AimCursor aimCursorRef) : base(id, graphics, true)
     {
-        _aimCursorRef = aimCursorRef;
+        AimCursorRef = aimCursorRef;
     }
 }
