@@ -16,4 +16,5 @@ public static class Graphics
         } }
     public static string[] Shadow { get; set; } = new[] { "\u2592", "\u2591" };
     public static string AimCursor { get; set; } = "  \u2588  |-- --|  \u2588  ";
+    public static string Bucket { get; set; } = "\u2588        \u2588|\u2588        \u2588|\u2588        \u2588|\u2588        \u2588|\u2588        \u2588|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588";
 }

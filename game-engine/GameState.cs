@@ -18,7 +18,7 @@ public static class GameState
             List<int[]> result = new();
             foreach (var gameObj in _gameObjects)
             {
-                if (!gameObj.IsSolid && gameObj is not AffectedByForces)
+                if (!gameObj.IsSolid)
                     continue;
 
                 for (int ix = 0; ix < gameObj.Width; ix++)
@@ -92,9 +92,14 @@ public static class GameState
             }
             if (!gameObject.OffScreenTop && !gameObject.OffScreenSide && !gameObject.Hidden)
             {
-                for (int i = 0; i < gameObject.Height; i++)
+                for (int iy = 0; iy < gameObject.Draw.Length; iy++)
                 {
-                    ScreenBuffer.DrawText(gameObject.Y + i, gameObject.X, gameObject.Draw[i]);
+                    for (int ix = 0; ix < gameObject.Draw[iy].Length; ix++)
+                    {
+                        if (gameObject.Draw[iy][ix] != ' ')
+                            ScreenBuffer.Draw(gameObject.Y + iy, gameObject.X + ix, gameObject.Draw[iy][ix]);
+                    }
+                    
                 }
             }
         }
@@ -116,17 +121,18 @@ public static class GameState
 
     public static void ShootCannon()
     {
-        int totalForce = -250 * ConsecutiveKeyPresses;
+        int totalForce = -500 * ConsecutiveKeyPresses;
         int verticalForce = (int)Math.Round(totalForce * (_player.AimCursorRef.Angle / 90));
         int horizontalForce = (int)Math.Round(totalForce *  (1 - (_player.AimCursorRef.Angle / 90)));
         _gameObjects.Add(new CannonShot(Tick, Graphics.Shot, _player.X, Console.WindowHeight - _player.Height, _player.AimCursorRef.DirectionLeft ? horizontalForce : 0 - horizontalForce, verticalForce));
         _player.XForce += _player.AimCursorRef.DirectionLeft ? 0 - horizontalForce / 2 : horizontalForce / 2; 
         _player.YForce += AffectedByForces.ReverseForce(verticalForce);
     }
-    public static void AddTank()
+    public static void SetupGame()
     {
         _gameObjects.Add(_player);
         _gameObjects.Add(_player.AimCursorRef);
+        _gameObjects.Add(new GameObject(2, Graphics.Bucket) { IsSolid = true, X = Console.WindowWidth / 5 * 4, Y = Console.WindowHeight / 3 }); 
     }
 
     public static void AddGameObj(GameObject obj)

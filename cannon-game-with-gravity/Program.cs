@@ -70,7 +70,8 @@ static void PlayerInput()
 static void StartGame()
 {
     ScreenBuffer.DrawText(0, 0, "Press any key to start game loop");
-    GameState.AddTank();
+    GameState.SetupGame();
+    
 
     ScreenBuffer.DrawScreen();
     Console.ReadKey();
