@@ -147,7 +147,6 @@ public static class GameState
             _gameObjects.Add(new Explosion(Tick * shotId + i, Graphics.Particle, x, y));
         }
     }
-    
     public static void UserInput(UserAction act)
     {
         switch (act)
