@@ -61,28 +61,40 @@ public class AffectedByForces : GameObject
 
     public override void Move(int x, int y)
     {
+        var originalX = X;
+        var originalY = Y;
         List<int[]> pathTaken = GameObject.CalculatePath(X, Y, X + x, Y + y);
         X += x;
         Y += y;
-        if (GameObjCollision(pathTaken, out AffectedByForces? collidedObj, out int[]? collisionCoordinates))
+        if (GameObjCollision(pathTaken, out AffectedByForces? collidedGravObj, out GameObject? collidedSolidObj))
         {
-            if (collidedObj is null && collisionCoordinates is not null) //Collision with a solid object
+            if (collidedGravObj is null && collidedSolidObj is not null) //Collision with a solid object
             {
-                if (Math.Abs(XForce) > FORCE_TO_INCREASE_HORIZONTAL_VELOCITY) 
-                    X = XForce < 0 ? collisionCoordinates[0] + 1 : collisionCoordinates[0] - 1;
-                if (Math.Abs(YForce) > FORCE_TO_INCREASE_VERTICAL_VELOCITY)
-                    Y = YForce < 0 ? collisionCoordinates[1] - 1 : collisionCoordinates[1] + 1;
-                
-                XForce = ReverseForce(XForce) / 2;
-                YForce = ReverseForce(YForce) / 2;
+                if (originalY > collidedSolidObj.Y - collidedSolidObj.Height && Y < collidedSolidObj.Y + collidedSolidObj.Height)
+                {
+                    Y = collidedSolidObj.Y - collidedSolidObj.Height - 1;
+                    YForce = ReverseForce(YForce) / 2;
+                } else if (originalY < collidedSolidObj.Y - collidedSolidObj.Height)
+                {
+                    YForce += YForce < 0 ? 200 : -200;
+                }
+                if (originalX < collidedSolidObj.X && X > collidedSolidObj.X)
+                {
+                    X = collidedSolidObj.X - 1;
+                    XForce = ReverseForce(XForce) / 2;
+                } else if (originalX > collidedSolidObj.X + Width && X < collidedSolidObj.X + Width)
+                {
+                    X = collidedSolidObj.X + collidedSolidObj.Width + 1;
+                    XForce = ReverseForce(XForce) / 2;
+                }
                 return;
             }
-            else if (collidedObj is not null)
+            else if (collidedGravObj is not null)
             {
-                XForce += collidedObj.XForce < 0 ? collidedObj.XForce - FORCE_TO_INCREASE_HORIZONTAL_VELOCITY : collidedObj.XForce + FORCE_TO_INCREASE_HORIZONTAL_VELOCITY;
-                YForce += collidedObj.YForce < 0 ? collidedObj.YForce + FORCE_TO_INCREASE_VERTICAL_VELOCITY : collidedObj.YForce - FORCE_TO_INCREASE_VERTICAL_VELOCITY;
-                collidedObj.XForce /= 2;
-                collidedObj.YForce /= 2;
+                XForce += collidedGravObj.XForce < 0 ? collidedGravObj.XForce - FORCE_TO_INCREASE_HORIZONTAL_VELOCITY : collidedGravObj.XForce + FORCE_TO_INCREASE_HORIZONTAL_VELOCITY;
+                YForce += collidedGravObj.YForce < 0 ? collidedGravObj.YForce + FORCE_TO_INCREASE_VERTICAL_VELOCITY : collidedGravObj.YForce - FORCE_TO_INCREASE_VERTICAL_VELOCITY;
+                collidedGravObj.XForce /= 2;
+                collidedGravObj.YForce /= 2;
             }  
         }
         if ((SideCollision(X) || SideCollision(X + Width)))
@@ -121,10 +133,10 @@ public class AffectedByForces : GameObject
         speed = speed > MAX_VELOCITY ? MAX_VELOCITY : speed;
         return force < 0 ? 0 - speed : speed;
     }
-    public bool GameObjCollision(List<int[]> path, out AffectedByForces? collisionObj, out int[]? collisionCoordinates)
+    public bool GameObjCollision(List<int[]> path, out AffectedByForces? collisionGravObj, out GameObject? collisionSolidObj)
     {
-        collisionObj = null;
-        collisionCoordinates = null;
+        collisionGravObj = null;
+        collisionSolidObj = null;
         var mapWithoutMe = GameState.GameObjectsOnMap.Where(arr => arr[^1] != Id);
         if (!mapWithoutMe.Any())
             return false;
@@ -133,8 +145,8 @@ public class AffectedByForces : GameObject
         if (objectCollision is null)
             return false;
 
-        collisionCoordinates = objectCollision.Take(2).ToArray();
-        collisionObj = GameState.FindGameObj(objectCollision[^1]) as AffectedByForces; //Last item of array is objects id
+        collisionSolidObj = GameState.FindGameObj(objectCollision[^1]); //A solid object
+        collisionGravObj = GameState.FindGameObj(objectCollision[^1]) as AffectedByForces; //A moving object
 
         return true;
     }
