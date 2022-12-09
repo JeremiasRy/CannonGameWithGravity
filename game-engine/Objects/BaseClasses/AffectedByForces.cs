@@ -70,9 +70,9 @@ public class AffectedByForces : GameObject
         {
             if (collidedGravObj is null && collidedSolidObj is not null) //Collision with a solid object
             {
-                if (originalY > collidedSolidObj.Y - collidedSolidObj.Height && Y < collidedSolidObj.Y + collidedSolidObj.Height)
+                if (originalY > collidedSolidObj.Y + collidedSolidObj.Height - 1 && Y < collidedSolidObj.Y)
                 {
-                    Y = collidedSolidObj.Y - collidedSolidObj.Height - 1;
+                    Y = collidedSolidObj.Y + collidedSolidObj.Height - 1;
                     YForce = ReverseForce(YForce) / 2;
                 } else if (originalY < collidedSolidObj.Y - collidedSolidObj.Height)
                 {
